@@ -1,0 +1,29 @@
+# Corpus & pipeline artifacts (never committed)
+/data/
+/output/
+*.manifest.json
+
+# uv / virtualenv
+.venv/
+uv.lock.bak
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Models / HF cache (if pointed inside the repo)
+.hf_cache/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store
