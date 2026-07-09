@@ -6,9 +6,13 @@ each is implemented by its corresponding issue/stage.
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import typer
 
 from smartrag.config import load_config
+from smartrag.inference.base import InferenceError
+from smartrag.ocr import build_ocr_backend
 
 app = typer.Typer(
     name="smartrag",
@@ -22,6 +26,20 @@ app = typer.Typer(
 def config() -> None:
     """Print the resolved configuration (YAML + env overrides) as JSON."""
     typer.echo(load_config().model_dump_json(indent=2))
+
+
+@app.command("ocr-check")
+def ocr_check(image: Path) -> None:
+    """Smoke-test the GLM-OCR backend on a single image file."""
+    backend = build_ocr_backend(load_config())
+    try:
+        backend.health_check()
+        result = backend.ocr_image(image.read_bytes())
+    except InferenceError as exc:
+        typer.secho(f"OCR failed: {exc}", fg=typer.colors.RED, err=True)
+        raise typer.Exit(code=1) from exc
+    typer.echo(f"confidence={result.confidence:.2f}")
+    typer.echo(result.text)
 
 
 @app.command()
