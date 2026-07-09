@@ -1,0 +1,47 @@
+# SmartRAG configuration — single source of truth for tunable behavior.
+# Override any value with env vars: SMARTRAG_<SECTION>__<FIELD>
+# e.g. SMARTRAG_OLLAMA__HOST=http://gpu-box:11434
+
+ollama:
+  host: http://localhost:11434
+  ocr_model: glm-ocr:latest
+  vlm_model: glm-ocr:latest
+  timeout_s: 120.0
+
+inference:
+  provider: ollama          # ollama | nvidia | huggingface
+  nvidia_base_url: null
+  nvidia_model: null
+  huggingface_model: null
+  max_retries: 3
+
+inventory:
+  holdout_size: 10
+  seed: 42
+
+triage:
+  extractable_text_ratio_min: 0.2   # below this -> route page to OCR
+  image_density_max: 0.5            # above this -> image-heavy page
+  escalation_rate_target: 0.15      # warn if OCR escalation exceeds this fraction
+
+parse:
+  docling_do_ocr: false
+
+table:
+  format: markdown_html     # markdown_html | markdown | html
+
+figures:
+  caption_strategy: conditional   # conditional | all | reference
+
+reading_order:
+  strategy: docling_vlm_fallback  # docling | docling_vlm_fallback | geometric
+
+chunk:
+  tokenizer: BAAI/bge-large-en-v1.5
+  target_tokens: 512
+  overlap_tokens: 64
+
+paths:
+  corpus_dir: data/corpus
+  output_dir: output
+  figures_dir: output/figures

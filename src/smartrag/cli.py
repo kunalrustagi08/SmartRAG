@@ -8,12 +8,20 @@ from __future__ import annotations
 
 import typer
 
+from smartrag.config import load_config
+
 app = typer.Typer(
     name="smartrag",
     help="Document processing pipeline for RAG: PDFs/Word docs -> chunk-ready structured output.",
     no_args_is_help=True,
     add_completion=False,
 )
+
+
+@app.command()
+def config() -> None:
+    """Print the resolved configuration (YAML + env overrides) as JSON."""
+    typer.echo(load_config().model_dump_json(indent=2))
 
 
 @app.command()
